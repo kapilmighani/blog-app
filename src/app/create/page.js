@@ -1,7 +1,8 @@
 'use client';
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import ReactQuill from "@/components/ReactQuillWrapper";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { RichTextEditor } from '@mantine/rte';
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
@@ -10,24 +11,51 @@ export default function CreatePost() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await fetch("/api/posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+
+    if (!title || !content) {
+      alert("Please fill all fields");
+      return;
+    }
+
+    const res = await fetch('/api/posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ title, content }),
     });
-    if (res.ok) router.push("/");
+
+    if (res.ok) {
+      alert("Post created successfully!");
+      router.push('/');
+    } else {
+      alert("Failed to create post");
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: 20 }}>
-      <input
-        type="text"
-        placeholder="Enter title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <ReactQuill value={content} onChange={setContent} />
-      <button type="submit">Create</button>
-    </form>
+    <div style={{ padding: 20, maxWidth: 800, margin: 'auto' }}>
+      <h1>Create Blog Post</h1>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{ width: '100%', padding: 10, marginBottom: 15 }}
+        />
+        <RichTextEditor value={content} onChange={setContent} style={{ marginBottom: 15 }} />
+        <button
+          type="submit"
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#0070f3',
+            color: '#fff',
+            border: 'none',
+            borderRadius: 5,
+          }}
+        >
+          Create Post
+        </button>
+      </form>
+    </div>
   );
 }
