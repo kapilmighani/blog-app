@@ -1,5 +1,5 @@
 'use client';
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'; // 🛑 THIS IS CRITICAL TO AVOID SSR
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
